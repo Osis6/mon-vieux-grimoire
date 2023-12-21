@@ -28,7 +28,13 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "rules": {
+      "linebreak-style": [
+        "error",
+        "windows"
+      ]
+    }
   },
   "browserslist": {
     "production": [

@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useState } from 'react';
 import axios from 'axios';
 import * as PropTypes from 'prop-types';
@@ -18,7 +20,10 @@ function SignIn({ setUser }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [notification, setNotification] = useState({ error: false, message: '' });
+  const [notification, setNotification] = useState({
+    error: false,
+    message: '',
+  });
   const signIn = async () => {
     try {
       setIsLoading(true);
@@ -62,7 +67,10 @@ function SignIn({ setUser }) {
         console.log('Something went wrong during signing up: ', response);
         return;
       }
-      setNotification({ error: false, message: 'Votre compte a bien été créé, vous pouvez vous connecter' });
+      setNotification({
+        error: false,
+        message: 'Votre compte a bien été créé, vous pouvez vous connecter',
+      });
     } catch (err) {
       setNotification({ error: true, message: err.message });
       console.log('Some error occured during signing up: ', err);
@@ -81,58 +89,56 @@ function SignIn({ setUser }) {
         <label htmlFor={email}>
           <p>Adresse email</p>
           <input
-            className=""
-            type="text"
-            name="email"
-            id="email"
+            className=''
+            type='text'
+            name='email'
+            id='email'
             value={email}
-            onChange={(e) => { setEmail(e.target.value); }}
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
           />
         </label>
-        <label htmlFor="password">
+        <label htmlFor='password'>
           <p>Mot de passe</p>
           <input
-            className="border-2 outline-none p-2 rounded-md"
-            type="password"
-            name="password"
-            id="password"
+            className='border-2 outline-none p-2 rounded-md'
+            type='password'
+            name='password'
+            id='password'
             value={password}
-            onChange={(e) => { setPassword(e.target.value); }}
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
           />
         </label>
         <div className={styles.Submit}>
           <button
-            type="submit"
-            className="
+            type='submit'
+            className='
             flex justify-center
             p-2 rounded-md w-1/2 self-center
-            bg-gray-800  text-white hover:bg-gray-800"
+            bg-gray-800  text-white hover:bg-gray-800'
             onClick={signIn}
           >
-            {isLoading ? <div className="" /> : null}
-            <span>
-              Se connecter
-            </span>
+            {isLoading ? <div className='' /> : null}
+            <span>Se connecter</span>
           </button>
           <span>OU</span>
           <button
-            type="submit"
-            className="
+            type='submit'
+            className='
             flex justify-center
             p-2 rounded-md w-1/2 self-center
-            bg-gray-800  text-white hover:bg-gray-800"
+            bg-gray-800  text-white hover:bg-gray-800'
             onClick={signUp}
           >
-            {
-                isLoading
-                  ? <div className="mr-2 w-5 h-5 border-l-2 rounded-full animate-spin" /> : null
-              }
-            <span>
-              {'S\'inscrire'}
-            </span>
+            {isLoading ? (
+              <div className='mr-2 w-5 h-5 border-l-2 rounded-full animate-spin' />
+            ) : null}
+            <span>{"S'inscrire"}</span>
           </button>
         </div>
-
       </div>
     </div>
   );

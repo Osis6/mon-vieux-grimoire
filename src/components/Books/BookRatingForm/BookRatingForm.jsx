@@ -1,3 +1,5 @@
+/** @format */
+
 import * as PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -8,9 +10,7 @@ import { APP_ROUTES } from '../../../utils/constants';
 import { useUser } from '../../../lib/customHooks';
 import { rateBook } from '../../../lib/common';
 
-function BookRatingForm({
-  rating, setRating, userId, setBook, id, userRated,
-}) {
+function BookRatingForm({ rating, setRating, userId, setBook, id, userRated }) {
   const { connectedUser, auth } = useUser();
   const navigate = useNavigate();
   const { register, formState, handleSubmit } = useForm({
@@ -44,9 +44,11 @@ function BookRatingForm({
       <form onSubmit={handleSubmit(onSubmit)}>
         <p>{rating > 0 ? 'Votre Note' : 'Notez cet ouvrage'}</p>
         <div className={styles.Stars}>
-          {!userRated ? generateStarsInputs(rating, register) : displayStars(rating)}
+          {!userRated
+            ? generateStarsInputs(rating, register)
+            : displayStars(rating)}
         </div>
-        {!userRated ? <button type="submit">Valider</button> : null}
+        {!userRated ? <button type='submit'>Valider</button> : null}
       </form>
     </div>
   );

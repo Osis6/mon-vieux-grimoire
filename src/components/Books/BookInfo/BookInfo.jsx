@@ -1,3 +1,5 @@
+/** @format */
+
 import * as PropTypes from 'prop-types';
 import React from 'react';
 import styles from '../../../pages/Book/Book.module.css';
@@ -27,10 +29,12 @@ BookInfo.propTypes = {
     year: PropTypes.number,
     imageUrl: PropTypes.string,
     genre: PropTypes.string,
-    ratings: PropTypes.arrayOf(PropTypes.shape({
-      userId: PropTypes.string,
-      grade: PropTypes.number,
-    })),
+    ratings: PropTypes.arrayOf(
+      PropTypes.shape({
+        userId: PropTypes.string,
+        grade: PropTypes.number,
+      })
+    ),
     averageRating: PropTypes.number,
   }).isRequired,
 };

@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './AddBook.module.css';
@@ -20,7 +22,7 @@ function AddBook() {
   }, [userLoading]);
 
   return (
-    <div className="content-container">
+    <div className='content-container'>
       <BackArrow />
       <div className={styles.Container}>
         {!created ? (
@@ -33,12 +35,12 @@ function AddBook() {
           <div className={styles.Created}>
             <h1>Merci!</h1>
             <p>votre livre a bien été publié</p>
-            <img src={bookAdd} alt="Livre ajouté" />
-            <Link to="/" className="button">Retour à l&apos;accueil</Link>
+            <img src={bookAdd} alt='Livre ajouté' />
+            <Link to='/' className='button'>
+              Retour à l&apos;accueil
+            </Link>
           </div>
-
         )}
-
       </div>
     </div>
   );

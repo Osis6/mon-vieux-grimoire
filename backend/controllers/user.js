@@ -1,18 +1,16 @@
 /** @format */
 
 const bcrypt = require('bcrypt');
-const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const emailValidator = require('email-validator');
 const passwordValidator = require('password-validator');
 const crypto = require('crypto');
+const User = require('../models/user');
 require('dotenv').config();
 
 // Generate a complex JWT secret key
-const generateJwtSecret = () => {
-  return crypto.randomBytes(64).toString('hex');
-};
-const jwtSecret = generateJwtSecret();
+const generateJwtSecret = () => crypto.randomBytes(64).toString('hex');
+const jwtSecret = process.env.JWT_SECRET || generateJwtSecret();
 
 exports.signup = (req, res, next) => {
   if (!emailValidator.validate(req.body.email)) {
@@ -74,7 +72,7 @@ exports.login = (req, res, next) => {
           });
           res.status(200).json({
             userId: user._id,
-            token: token,
+            token,
           });
         })
         .catch((error) => res.status(500).json({ error }));

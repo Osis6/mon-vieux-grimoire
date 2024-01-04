@@ -1,12 +1,11 @@
 /** @format */
 
 const express = require('express');
-
 const app = express();
 const mongoose = require('mongoose');
-const path = require('path');
 const userRoutes = require('./routes/user');
 const bookRoutes = require('./routes/book');
+const path = require('path');
 require('dotenv').config();
 
 mongoose

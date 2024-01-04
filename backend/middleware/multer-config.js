@@ -25,11 +25,17 @@ const convertToWebp = (req, res, next) => {
   if (req.file) {
     const { path } = req.file;
     const webpPath = path.replace(/\.[^.]+$/, '.webp');
+
     sharp(path)
       .webp()
       .toFile(webpPath)
-      .then(() => {
-        fs.unlinkSync(path);
+      .then(async () => {
+        try {
+          await fs.promises.unlink(path);
+        } catch (unlinkError) {
+          console.error('Error during unlink:', unlinkError.message);
+        }
+
         sharp(webpPath)
           .webp({ quality: 80 })
           .toFile(webpPath, () => {
@@ -44,3 +50,5 @@ const convertToWebp = (req, res, next) => {
     next();
   }
 };
+
+module.exports = { upload, convertToWebp };

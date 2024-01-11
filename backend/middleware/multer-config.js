@@ -30,12 +30,6 @@ const convertToWebp = (req, res, next) => {
       .webp()
       .toFile(webpPath)
       .then(async () => {
-        try {
-          await fs.promises.unlink(path);
-        } catch (unlinkError) {
-          console.error('Error during unlink:', unlinkError.message);
-        }
-
         sharp(webpPath)
           .webp({ quality: 80 })
           .toFile(webpPath, () => {

@@ -9,6 +9,8 @@ const MIME_TYPES = {
   'image/png': 'png',
 };
 
+sharp.cache(false);
+
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
     callback(null, 'images');
@@ -36,6 +38,11 @@ const convertToWebp = (req, res, next) => {
             req.file.path = webpPath;
             next();
           });
+        try {
+          await fs.unlinkSync(path);
+        } catch (unlinkError) {
+          console.error('Error during unlink:', unlinkError.message);
+        }
       })
       .catch((error) => {
         next(error);
@@ -44,5 +51,4 @@ const convertToWebp = (req, res, next) => {
     next();
   }
 };
-
 module.exports = { upload, convertToWebp };

@@ -62,9 +62,9 @@ exports.modifyBook = (req, res, next) => {
         return res.status(403).json({ error: 'Requête non autorisée !' });
       } else {
         // Supprimer l'ancienne image si une nouvelle image est fournie
-        if (req.file) {
-          const filename = book.imageUrl.split('/images/')[1].split('.webp')[0];
-          fs.unlink(`images/${filename}`, (err) => {
+        if (req.file && book.imageUrl) {
+          const oldImagePath = `images/${book.imageUrl.split('/images/')[1]}`;
+          fs.unlink(oldImagePath, (err) => {
             if (err) {
               console.error(err);
             }
@@ -73,21 +73,43 @@ exports.modifyBook = (req, res, next) => {
 
         // Convertir l'image en format WebP avec Sharp
         if (req.file) {
+          const newImagePath = `images/${req.file.filename}.webp`;
           sharp(req.file.path)
             .toFormat('webp')
-            .toFile(`images/${req.file.filename}.webp`, (err, info) => {
+            .toFile(newImagePath, (err, info) => {
               if (err) {
                 console.error(err);
+                return res
+                  .status(500)
+                  .json({ error: 'Erreur lors de la conversion en WebP' });
               }
-            });
-        }
 
-        Book.updateOne(
-          { _id: req.params.id },
-          { ...bookObject, _id: req.params.id }
-        )
-          .then(() => res.status(200).json({ message: 'Livre modifié !' }))
-          .catch((error) => res.status(401).json({ error }));
+              // Supprimer le fichier JPEG après la conversion réussie
+              fs.unlink(req.file.path, (err) => {
+                if (err) {
+                  console.error(err);
+                }
+              });
+
+              // Mettre à jour le livre avec la nouvelle image
+              Book.updateOne(
+                { _id: req.params.id },
+                { ...bookObject, _id: req.params.id }
+              )
+                .then(() =>
+                  res.status(200).json({ message: 'Livre modifié !' })
+                )
+                .catch((error) => res.status(401).json({ error }));
+            });
+        } else {
+          // Si aucune nouvelle image fournie, mettre à jour le livre directement
+          Book.updateOne(
+            { _id: req.params.id },
+            { ...bookObject, _id: req.params.id }
+          )
+            .then(() => res.status(200).json({ message: 'Livre modifié !' }))
+            .catch((error) => res.status(401).json({ error }));
+        }
       }
     })
     .catch((error) => {

@@ -17,7 +17,7 @@ router.post(
   multerConfig.convertToWebp,
   bookCtrl.createBook
 );
-router.get('/:id', bookCtrl.getBook);
+router.get('/:id(bestrating|[0-9a-fA-F]{24})', bookCtrl.getBook);
 router.put(
   '/:id',
   auth,
@@ -26,7 +26,6 @@ router.put(
   bookCtrl.modifyBook
 );
 router.delete('/:id', auth, bookCtrl.deleteBook);
-router.get('/bestrating', bookCtrl.getBestRatedBooks);
 router.post('/:id/rating', auth, bookCtrl.rateBook);
 
 module.exports = router;

@@ -174,42 +174,28 @@ exports.rateBook = async (req, res) => {
   }
 };
 
-exports.getBook = (req, res, next) => {
+exports.getBook = async (req, res, next) => {
   const { id } = req.params;
 
-  if (id === 'bestrating') {
-    getBestRatedBooks(req, res, next);
-  } else {
-    getOneBook(req, res, next);
-  }
-};
-
-const getBestRatedBooks = async (req, res, next) => {
   try {
-    const books = await Book.find().sort({ averageRating: -1 }).limit(3);
-    res.json(books);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      message:
-        'Une erreur est survenue lors de la récupération des livres les mieux notés.',
-    });
-  }
-};
-
-exports.getBestRatedBooks = getBestRatedBooks;
-
-const getOneBook = (req, res, next) => {
-  const { id } = req.params;
-  Book.findOne({ _id: id })
-    .then((book) => {
-      if (book) {
-        res.status(200).json(book);
+    if (id === 'bestrating') {
+      const bestRatedBooks = await Book.find()
+        .sort({ averageRating: -1 })
+        .limit(3);
+      res.json(bestRatedBooks);
+    } else {
+      const oneBook = await Book.findOne({ _id: id });
+      if (oneBook) {
+        res.status(200).json(oneBook);
       } else {
         res.status(404).json({ message: 'Livre non trouvé.' });
       }
-    })
-    .catch((error) => {
-      res.status(500).json({ error });
+    }
+  } catch (error) {
+    console.error('Error in getBook:', error);
+    res.status(500).json({
+      message: 'Une erreur est survenue lors de la récupération des livres.',
+      error: error.message,
     });
+  }
 };

@@ -25,30 +25,30 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage }).single('image');
 const convertToWebp = (req, res, next) => {
   if (req.file) {
-    const { path } = req.file;
+    const { path, filename } = req.file;
     const webpPath = path.replace(/\.[^.]+$/, '.webp');
 
     sharp(path)
-      .webp()
-      .toFile(webpPath)
-      .then(async () => {
-        sharp(webpPath)
-          .webp({ quality: 80 })
-          .toFile(webpPath, () => {
-            req.file.path = webpPath;
-            next();
-          });
+      .webp({ quality: 80 })
+      .toFile(webpPath, (err) => {
+        if (err) {
+          return next(err);
+        }
+
+        req.file.path = webpPath;
+        req.file.filename = filename.replace(/\.[^.]+$/, '.webp');
+
         try {
-          await fs.unlinkSync(path);
+          fs.unlinkSync(path);
         } catch (unlinkError) {
           console.error('Error during unlink:', unlinkError.message);
         }
-      })
-      .catch((error) => {
-        next(error);
+
+        next();
       });
   } else {
     next();
   }
 };
+
 module.exports = { upload, convertToWebp };

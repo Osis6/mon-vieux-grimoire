@@ -2,7 +2,6 @@
 
 const Book = require('../models/book');
 const fs = require('fs');
-const sharp = require('sharp');
 
 exports.createBook = async (req, res, next) => {
   try {
@@ -38,7 +37,7 @@ exports.modifyBook = async (req, res, next) => {
         ...JSON.parse(req.body.book),
         imageUrl: `${req.protocol}://${req.get('host')}/images/${
           req.file.filename
-        }.webp`,
+        }`,
       }
     : { ...req.body };
 
@@ -58,20 +57,6 @@ exports.modifyBook = async (req, res, next) => {
           console.error(err);
         }
       });
-    }
-    if (req.file) {
-      const newImagePath = `images/${req.file.filename}.webp`;
-      await sharp(req.file.path).toFormat('webp').toFile(newImagePath);
-
-      fs.unlink(req.file.path, (err) => {
-        if (err) {
-          console.error(err);
-        }
-      });
-
-      bookObject.imageUrl = `${req.protocol}://${req.get('host')}/images/${
-        req.file.filename
-      }.webp`;
     }
 
     await Book.updateOne(
